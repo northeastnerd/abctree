@@ -39,11 +39,11 @@ abctree_style.innerHTML = '.abctree_collapsed { background-image: url("data:imag
 document.getElementsByTagName('head')[0].appendChild(abctree_style);
 abctree_style = document.createElement('style');
 abctree_style.type = 'text/css';
-abctree_style.innerHTML = '.abctree_selected { background-color: #00ff00; cursor: pointer }';
+abctree_style.innerHTML = '.abctree_selected { background-color: #e0e0e0; cursor: pointer }';
 document.getElementsByTagName('head')[0].appendChild(abctree_style);
 abctree_style = document.createElement('style');
 abctree_style.type = 'text/css';
-abctree_style.innerHTML = '.abctree_deselected { background-color: #ffffff; cursor: pointer }';
+abctree_style.innerHTML = '.abctree_deselected { background-color: null; cursor: pointer }';
 document.getElementsByTagName('head')[0].appendChild(abctree_style);
 
 // abctree = root of the tree = table
