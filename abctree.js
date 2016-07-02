@@ -25,26 +25,26 @@ inside an HTML table, allows click to expand / collapse
 to view and traverse the hierarchy.
 */
 
-var abctree_style = document.createElement('style');
-abctree_style.type = 'text/css';
-abctree_style.innerHTML = '.abctree_leaf { background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJCAYAAADgkQYQAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4AMfEi8WbCB2GQAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAAAYElEQVQY032QuQ2AMBAEZxE5ZVERufshpwQ6cAFUQEy0BLYlm8cjbbY3dzqRsc0Xkhhygx4qpV4tmdZW/2QE4ATNC0xHx7c73WVDCNhuktZd1UCMP6bNEPwylOjvgvpvNwXXOMpWayahAAAAAElFTkSuQmCC"); width: 9px; height: 9px; float: left; margin: 3px; }';
-document.getElementsByTagName('head')[0].appendChild(abctree_style);
-abctree_style = document.createElement('style');
-abctree_style.type = 'text/css';
-abctree_style.innerHTML = '.abctree_expanded { background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJCAIAAABv85FHAAAAT0lEQVQImWNowA0YGhoarn7+j4kQcq9//n/98//bX//f/Pz/5uf/17+Q5N78/P/2FwpCyDG6VSEjFLlPv3Hb9/UPOkKR+/EXKgphQOVwAQAPSLGYw3tZHAAAAABJRU5ErkJggg=="); width: 9px; height: 9px; float: left; margin: 3px; }';
-document.getElementsByTagName('head')[0].appendChild(abctree_style);
-abctree_style = document.createElement('style');
-abctree_style.type = 'text/css';
-abctree_style.innerHTML = '.abctree_collapsed { background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJCAIAAABv85FHAAAAXElEQVQImXXNQQrAIAwEQP1cHuUpn/QVxksl0FjL9qBQpXXZw8IE4ngfx8yx4NvXkiEZPAUxiCHVycSQKzyFWJAr8myewtzFjgv94uefNmgb1vdi5w1tiGWMYbs8uiCoqOdNhIkAAAAASUVORK5CYII="); width: 9px; height: 9px; float: left; margin: 3px; }';
-document.getElementsByTagName('head')[0].appendChild(abctree_style);
-abctree_style = document.createElement('style');
-abctree_style.type = 'text/css';
-abctree_style.innerHTML = '.abctree_selected { background-color: #e0e0e0; cursor: pointer }';
-document.getElementsByTagName('head')[0].appendChild(abctree_style);
-abctree_style = document.createElement('style');
-abctree_style.type = 'text/css';
-abctree_style.innerHTML = '.abctree_deselected { background-color: null; cursor: pointer }';
-document.getElementsByTagName('head')[0].appendChild(abctree_style);
+var abctree_style = document.createElement("style");
+abctree_style.type = "text/css";
+abctree_style.innerHTML = ".abctree_leaf { background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJCAYAAADgkQYQAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4AMfEi8WbCB2GQAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAAAYElEQVQY032QuQ2AMBAEZxE5ZVERufshpwQ6cAFUQEy0BLYlm8cjbbY3dzqRsc0Xkhhygx4qpV4tmdZW/2QE4ATNC0xHx7c73WVDCNhuktZd1UCMP6bNEPwylOjvgvpvNwXXOMpWayahAAAAAElFTkSuQmCC\"); width: 9px; height: 9px; float: left; margin: 3px; }";
+document.getElementsByTagName("head")[0].appendChild(abctree_style);
+abctree_style = document.createElement("style");
+abctree_style.type = "text/css";
+abctree_style.innerHTML = ".abctree_expanded { background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJCAIAAABv85FHAAAAT0lEQVQImWNowA0YGhoarn7+j4kQcq9//n/98//bX//f/Pz/5uf/17+Q5N78/P/2FwpCyDG6VSEjFLlPv3Hb9/UPOkKR+/EXKgphQOVwAQAPSLGYw3tZHAAAAABJRU5ErkJggg==\"); width: 9px; height: 9px; float: left; margin: 3px; }";
+document.getElementsByTagName("head")[0].appendChild(abctree_style);
+abctree_style = document.createElement("style");
+abctree_style.type = "text/css";
+abctree_style.innerHTML = ".abctree_collapsed { background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJCAIAAABv85FHAAAAXElEQVQImXXNQQrAIAwEQP1cHuUpn/QVxksl0FjL9qBQpXXZw8IE4ngfx8yx4NvXkiEZPAUxiCHVycSQKzyFWJAr8myewtzFjgv94uefNmgb1vdi5w1tiGWMYbs8uiCoqOdNhIkAAAAASUVORK5CYII=\"); width: 9px; height: 9px; float: left; margin: 3px; }";
+document.getElementsByTagName("head")[0].appendChild(abctree_style);
+abctree_style = document.createElement("style");
+abctree_style.type = "text/css";
+abctree_style.innerHTML = ".abctree_selected { background-color: #e0e0e0; cursor: pointer }";
+document.getElementsByTagName("head")[0].appendChild(abctree_style);
+abctree_style = document.createElement("style");
+abctree_style.type = "text/css";
+abctree_style.innerHTML = ".abctree_deselected { background-color: null; cursor: pointer }";
+document.getElementsByTagName("head")[0].appendChild(abctree_style);
 
 // abctree = root of the tree = table
 var abctree = function(id, parent_id){
@@ -61,7 +61,7 @@ var abctree = function(id, parent_id){
 
   // return a pointer to the tree for manipulation and traversal
   return this;
-}
+};
 
 abctree.prototype.node = function(id, val){
   "use strict";
@@ -104,19 +104,19 @@ var abctree_node = function(parent, table, id, val){
 
   return this;
 };
-  
+
 // make node invisible on page
 abctree_node.prototype.hide = function(){
   "use strict";
   this.elem.style.display = "none";
 };
-  
+
 // make node visible on page
 abctree_node.prototype.show = function(){
   "use strict";
   this.elem.style.display = "block";
 };
-  
+
 // user clicked on selection
 abctree_node.prototype.select = function(opt){
   "use strict";
@@ -130,13 +130,13 @@ abctree_node.prototype.select = function(opt){
   me.tree.selected = me;
   me.elem.children[1].className = "abctree_selected";
 };
-  
+
 // user clicked on selection
 abctree_node.prototype.deselect = function(){
   "use strict";
   this.elem.children[1].className = "abctree_deselected";
 };
-  
+
 // get either all nodes below or all nodes in the
 // next level down plus all nodes in expanded nodes
 // beyond that
@@ -158,7 +158,7 @@ abctree_node.prototype.all_below = function(filter){
 
   return below;
 };
-  
+
 // user clicked, collapse the tree below this node
 abctree_node.prototype.collapse = function(item){
   "use strict";
@@ -216,14 +216,13 @@ abctree_node.prototype.add_child = function(id, val){
   child.select();
   return child;
 }
-  
+
 // search function
 abctree_node.prototype.get_child_by_id = function(id){
   "use strict";
   for(var x = 0; x < nodes.length; x++)
     if(nodes[x].id == id)
       return nodes[x];
-  
+
   return null;
 }
-
