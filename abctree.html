@@ -1,29 +1,33 @@
 <html>
-<!-- License information: MIT License                                                     -->
-<!-- 											  -->
-<!-- Copyright (c) Chris Schalick 2015 All Rights Reserved.				  -->
-<!-- 											  -->
-<!-- Permission is hereby granted, free of charge, to any person obtaining a copy 	  -->
-<!-- of this software and associated documentation files (the "Software"), to deal 	  -->
-<!-- in the Software without restriction, including without limitation the rights 	  -->
-<!-- to use, copy, modify, merge, publish, distribute, sublicense, and/or sell 		  -->
-<!-- copies of the Software, and to permit persons to whom the Software is furnished 	  -->
-<!-- to do so, subject to the following conditions:					  -->
-<!-- 											  -->
-<!--   The above copyright notice and this permission notice shall be included in all 	  -->
-<!--   copies or substantial portions of the Software.					  -->
-<!-- 											  -->
-<!-- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,  -->
-<!-- INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 	  -->
-<!-- PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT   -->
-<!-- HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION 	  -->
-<!-- OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 	  -->
-<!-- SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.				  -->
-<!--                                                                                      -->
+<script>
+/*
+License information: MIT License
+
+Copyright (c) Chris Schalick 2015 All Rights Reserved.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is furnished
+to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
+</script>
 <head>
   <script src="https://rawgit.com/northeastnerd/abctree/master/abctree.js"></script>
 </head>
 <body>
+  <button onclick="get_selected()">Selected ID:</button>&nbsp<div id="sel"></div><br>
   <div id="foo"></div>
   <script>
     var root = new abctree("the_tree", "foo");
@@ -37,6 +41,8 @@
         four = thre.add_child("lvl4c", "lv3 4.3");
         one  = root.node("four", "lv1 1.2");
         two  = one.add_child("five", "lv1 2.3");
+
+    function get_selected(){document.getElementById("sel").innerHTML = root.selected.id;};
   </script>
 </body>
 </html>
