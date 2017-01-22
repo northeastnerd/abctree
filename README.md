@@ -6,6 +6,6 @@ It requires a single javascript include and supports callbacks when nodes in the
 
 Read the example HTML / js files for usage. Live demo here: 
 
-  https://rawgit.com/northeastnerd/abctree/master/abctree.html
+&nbsp&nbsp https://rawgit.com/northeastnerd/abctree/master/abctree.html
 
 Enjoy!
