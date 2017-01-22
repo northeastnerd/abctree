@@ -24,25 +24,13 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 </script>
 <head>
-  <script src="https://rawgit.com/northeastnerd/abctree/master/abctree.js"></script>
+  <!--script src="https://rawgit.com/northeastnerd/abctree/master/abctree.js"></script-->
+  <script src="scripts/abctree.js"></script>
+  <script src="scripts/tree_demo.js"></script>
 </head>
 <body>
   <button onclick="get_selected()">Selected ID:</button>&nbsp<div id="sel"></div><br>
-  <div id="foo"></div>
-  <script>
-    var root = new abctree("the_tree", "foo");
-    var one  = root.node("one", "lvl 1.1");
-    var two  = one.add_child("two", "lv1 2.1");
-    var thre = two.add_child("two-5", "lv2 3.1");
-        two  = one.add_child("three", "lv1 2.2");
-        thre = two.add_child("three-5", "lv2 3.2");
-    var four = thre.add_child("lvl4", "lv3 4.1");
-        four = thre.add_child("lvl4b", "lv3 4.2");
-        four = thre.add_child("lvl4c", "lv3 4.3");
-        one  = root.node("four", "lv1 1.2");
-        two  = one.add_child("five", "lv1 2.3");
-
-    function get_selected(){document.getElementById("sel").innerHTML = root.selected.id;};
-  </script>
+  Highlighted:<div id="hl"></div><br>
+  <div id="tree_goes_here"></div>
 </body>
 </html>
