@@ -1,6 +1,6 @@
 # abctree
 Single file javascript tree visualizer
 
-Read the example HTML file for usage. Live demo here: http://northeastnerd.net/northeastnerd.html?post=5
+Read the example HTML / js files for usage. Live demo here: https://rawgit.com/northeastnerd/abctree/master/abctree.html
 
 Enjoy!
