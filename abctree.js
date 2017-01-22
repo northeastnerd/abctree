@@ -39,11 +39,11 @@ abctree_style.innerHTML = ".abctree_collapsed { background-image: url(\"data:ima
 document.getElementsByTagName("head")[0].appendChild(abctree_style);
 abctree_style = document.createElement("style");
 abctree_style.type = "text/css";
-abctree_style.innerHTML = ".abctree_selected { background-color: #e0e0e0; cursor: pointer }";
+abctree_style.innerHTML = ".abctree_selected { background-color: #e0e0e0; cursor: pointer; font-family: 'Arial'; font-size: 14px; }";
 document.getElementsByTagName("head")[0].appendChild(abctree_style);
 abctree_style = document.createElement("style");
 abctree_style.type = "text/css";
-abctree_style.innerHTML = ".abctree_deselected { background-color: null; cursor: pointer }";
+abctree_style.innerHTML = ".abctree_deselected { background-color: null; cursor: pointer; font-family: 'Arial'; font-size: 14px; }";
 document.getElementsByTagName("head")[0].appendChild(abctree_style);
 
 // abctree = root of the tree = table
@@ -63,14 +63,20 @@ var abctree = function(id, parent_id){
   return this;
 };
 
-abctree.prototype.node = function(id, val){
+abctree.prototype.node = function(id, val, user_cb){
   "use strict";
   var kid = new abctree_node(this, this.elem, id, val);
   kid.tree = this;
   this.nodes.push(kid);
   kid.select();
-  var callback = kid.make_callback(kid.select, kid);
-  kid.elem.children[1].onclick = callback;
+  var sel_cb = kid.make_callback(kid.select, kid);
+  var other_cb;
+  if(typeof user_cb == "function")
+    other_cb = kid.make_callback(user_cb, id);
+  else
+    other_cb = function(){};
+  var cb_fn = function(){sel_cb(); other_cb();};
+  kid.elem.children[1].onclick = cb_fn;
   return kid;
 };
 
@@ -89,19 +95,33 @@ abctree.prototype.all_below = function(){
 // abctree_node = nodes in the tree = entries
 var abctree_node = function(parent, table, id, val){
   "use strict";
+  var x, new_row, l, tid, all, insert_point;
   this.id = id;
   this.nodes = [];
   this.parent = parent;
   this.indent = 0;
-  this.elem = document.createElement("tr");
-  this.elem.style.display = "block";
-  this.elem.id = id;
-  this.elem.innerHTML = "<div id=" + id + ".img></div><td id=" + id + ".val>" + val + "</td>";
-  this.elem.children[0].className = "abctree_leaf";
   this.collapsed = true;
   this.table = table;
-  this.table.appendChild(this.elem);
-
+  l = table.rows.length;
+  if(parent.nodes.length == 0)
+    tid = parent.id;
+  else {
+    all = parent.all_below();
+    tid = all[all.length - 1].id;
+  }
+  insert_point = this.table.rows.length;
+  for(x = 0; x < l; x++){
+    if(this.table.rows[x].id == tid){
+      insert_point = x + 1;
+      break;
+    }
+  }
+  new_row = this.table.insertRow(insert_point);
+  new_row.style.display = "block";
+  new_row.id = id;
+  new_row.innerHTML = "<div id=" + id + ".img></div><td id=" + id + ".val>" + val + "</td>";
+  new_row.children[0].className = "abctree_leaf";
+  this.elem = new_row;
   return this;
 };
 
@@ -199,7 +219,7 @@ abctree_node.prototype.make_callback = function(call, arg){
 }
 
 // add a child node beneath this one
-abctree_node.prototype.add_child = function(id, val){
+abctree_node.prototype.add_child = function(id, val, user_cb){
   "use strict";
   var child = new abctree_node(this, this.table, id, val);
   child.indent = this.indent + 10;
@@ -208,10 +228,16 @@ abctree_node.prototype.add_child = function(id, val){
   child.parent = this;
   child.tree = this.tree;
   this.elem.children[0].className = "abctree_collapsed";
-  var callback = this.make_callback(this.toggle_expanded, this);
-  this.elem.children[0].onclick = callback;
-  callback = child.make_callback(child.select, child);
-  child.elem.children[1].onclick = callback;
+  var sel_cb = this.make_callback(this.toggle_expanded, this);
+  this.elem.children[0].onclick = sel_cb;
+  sel_cb = child.make_callback(child.select, child);
+  var other_cb;
+  if(typeof user_cb == "function")
+    other_cb = child.make_callback(user_cb, id);
+  else
+    other_cb = function(){};
+  var cb_fn = function(){sel_cb(); other_cb();};
+  child.elem.children[1].onclick = cb_fn;
   this.nodes.push(child);
   child.select();
   return child;
