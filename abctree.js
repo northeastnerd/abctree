@@ -49,24 +49,26 @@ document.getElementsByTagName("head")[0].appendChild(abctree_style);
 // abctree = root of the tree = table
 var abctree = function(id, parent_id){
   "use strict";
+  this.node_num = 0;
   this.id = id;
   this.nodes = [];
   this.indent = 0;
-  this.elem = document.createElement("table");
-  this.elem.id = id;
+  this.table = document.createElement("table");
+  this.table.id = id;
   this.selected = null;
+  this.root = this;
 
   // insert the html element into the DOM
-  document.getElementById(parent_id).appendChild(this.elem);
+  document.getElementById(parent_id).appendChild(this.table);
 
   // return a pointer to the tree for manipulation and traversal
   return this;
 };
 
-abctree.prototype.node = function(id, val, user_cb){
+// add a node at the top level of the tree
+abctree.prototype.add_child = function(id, val, user_cb, after){
   "use strict";
-  var kid = new abctree_node(this, this.elem, id, val);
-  kid.tree = this;
+  var kid = new abctree_node(this, id, val);
   this.nodes.push(kid);
   kid.select();
   var sel_cb = kid.make_callback(kid.select, kid);
@@ -76,7 +78,7 @@ abctree.prototype.node = function(id, val, user_cb){
   else
     other_cb = function(){};
   var cb_fn = function(){sel_cb(); other_cb();};
-  kid.elem.children[1].onclick = cb_fn;
+  kid.table_row.children[1].onclick = cb_fn;
   return kid;
 };
 
@@ -92,18 +94,38 @@ abctree.prototype.all_below = function(){
   return below;
 };
 
+// UI asked to collapse the whole tree
+abctree.prototype.collapse_all = function(item){
+  "use strict";
+  if(item == null)
+    item = this;
+  var i, nodes = item.all_below();
+  for(i = 0; i < nodes.length; i++)
+    nodes[i].collapse(nodes[i]);
+};
+
 // abctree_node = nodes in the tree = entries
-var abctree_node = function(parent, table, id, val){
+var abctree_node = function(parent, id, val, after){
   "use strict";
   var x, new_row, l, tid, all, insert_point;
-  this.id = id;
+  if(typeof after == "undefined")
+    after = null;
+  this.root = parent.root;
+  this.id = this.root.id + "." + this.root.node_num++;
   this.nodes = [];
   this.parent = parent;
   this.indent = 0;
   this.collapsed = true;
-  this.table = table;
-  l = table.rows.length;
-  if(parent.nodes.length == 0)
+  this.table = parent.table;
+  this.val = val;
+  l = parent.table.rows.length;
+  if(after != null){
+    all = [];
+    all.push(after);
+    all = all.concat(after.all_below());
+    tid = all[all.length - 1].id;
+  }
+  else if(parent.nodes.length == 0)
     tid = parent.id;
   else {
     all = parent.all_below();
@@ -118,23 +140,23 @@ var abctree_node = function(parent, table, id, val){
   }
   new_row = this.table.insertRow(insert_point);
   new_row.style.display = "block";
-  new_row.id = id;
-  new_row.innerHTML = "<div id=" + id + ".img></div><td id=" + id + ".val>" + val + "</td>";
+  new_row.id = this.id;
+  new_row.innerHTML = "<div id=" + this.id + ".img></div><td id=" + this.id + ".val>" + val + "</td>";
   new_row.children[0].className = "abctree_leaf";
-  this.elem = new_row;
+  this.table_row = new_row;
   return this;
 };
 
 // make node invisible on page
 abctree_node.prototype.hide = function(){
   "use strict";
-  this.elem.style.display = "none";
+  this.table_row.style.display = "none";
 };
 
 // make node visible on page
 abctree_node.prototype.show = function(){
   "use strict";
-  this.elem.style.display = "block";
+  this.table_row.style.display = "block";
 };
 
 // user clicked on selection
@@ -145,16 +167,16 @@ abctree_node.prototype.select = function(opt){
     me = opt;
   else
     me = this;
-  if(me.tree.selected != null)
-    me.tree.selected.deselect();
-  me.tree.selected = me;
-  me.elem.children[1].className = "abctree_selected";
+  if(me.root.selected != null)
+    me.root.selected.deselect();
+  me.root.selected = me;
+  me.table_row.children[1].className = "abctree_selected";
 };
 
 // user clicked on selection
 abctree_node.prototype.deselect = function(){
   "use strict";
-  this.elem.children[1].className = "abctree_deselected";
+  this.table_row.children[1].className = "abctree_deselected";
 };
 
 // get either all nodes below or all nodes in the
@@ -182,8 +204,8 @@ abctree_node.prototype.all_below = function(filter){
 // user clicked, collapse the tree below this node
 abctree_node.prototype.collapse = function(item){
   "use strict";
-  if(item.elem.children[0].className != "abctree_leaf"){
-    item.elem.children[0].className = "abctree_collapsed";
+  if(item.table_row.children[0].className != "abctree_leaf"){
+    item.table_row.children[0].className = "abctree_collapsed";
     item.collapsed = true;
     var below = item.all_below();
     below.forEach(function(e){e.hide();});
@@ -193,8 +215,8 @@ abctree_node.prototype.collapse = function(item){
 // user clicked, expand the tree below this node
 abctree_node.prototype.expand = function(item){
   "use strict";
-  if(item.elem.children[0].className != "abctree_leaf"){
-    item.elem.children[0].className = "abctree_expanded";
+  if(item.table_row.children[0].className != "abctree_leaf"){
+    item.table_row.children[0].className = "abctree_expanded";
     item.collapsed = false;
     var below = item.nodes;
     var below = below.concat(item.all_below("expanded"));
@@ -205,9 +227,9 @@ abctree_node.prototype.expand = function(item){
 // user clicked, either expand or collapse based on state
 abctree_node.prototype.toggle_expanded = function(item){
   "use strict";
-  if(item.elem.children[0].className == "abctree_expanded")
+  if(item.table_row.children[0].className == "abctree_expanded")
     item.collapse(item);
-  else if(item.elem.children[0].className == "abctree_collapsed")
+  else if(item.table_row.children[0].className == "abctree_collapsed")
     item.expand(item);
 };
 
@@ -219,17 +241,17 @@ abctree_node.prototype.make_callback = function(call, arg){
 }
 
 // add a child node beneath this one
-abctree_node.prototype.add_child = function(id, val, user_cb){
+abctree_node.prototype.add_child = function(id, val, user_cb, after){
   "use strict";
-  var child = new abctree_node(this, this.table, id, val);
+  var child = new abctree_node(this, id, val, after);
   child.indent = this.indent + 10;
-  child.elem.style.margin = "0px 0px 0px " + child.indent + "px";
-  child.elem.style.display = "none";
+  child.table_row.style.margin = "0px 0px 0px " + child.indent + "px";
+  child.table_row.style.display = "none";
   child.parent = this;
-  child.tree = this.tree;
-  this.elem.children[0].className = "abctree_collapsed";
+  child.root = this.root;
+  this.table_row.children[0].className = "abctree_collapsed";
   var sel_cb = this.make_callback(this.toggle_expanded, this);
-  this.elem.children[0].onclick = sel_cb;
+  this.table_row.children[0].onclick = sel_cb;
   sel_cb = child.make_callback(child.select, child);
   var other_cb;
   if(typeof user_cb == "function")
@@ -237,10 +259,30 @@ abctree_node.prototype.add_child = function(id, val, user_cb){
   else
     other_cb = function(){};
   var cb_fn = function(){sel_cb(); other_cb();};
-  child.elem.children[1].onclick = cb_fn;
+  child.table_row.children[1].onclick = cb_fn;
   this.nodes.push(child);
   child.select();
+  this.expand(this);
   return child;
+}
+
+// add a child node beneath this one
+abctree_node.prototype.delete = function(){
+  "use strict";
+  var x, nodes, list = this.all_below();
+  for(x = 0; x < this.table.rows.length; x++)
+    if(this.table.rows[x].id == this.id){
+      this.table.deleteRow(x);
+      break;
+    }
+  for(x = 0; x < this.parent.nodes.length; x++)
+    if(this.parent.nodes[x] == this){
+      nodes = this.parent.nodes.slice(0, x);
+      nodes = nodes.concat(this.parent.nodes.slice(x + 1));
+      this.parent.nodes = nodes;
+    }
+  for(x = 0; x < list.length; x++)
+    list[x].delete();
 }
 
 // search function
