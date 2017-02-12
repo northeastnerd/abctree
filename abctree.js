@@ -285,12 +285,24 @@ abctree_node.prototype.delete = function(){
     list[x].delete();
 }
 
-// search function
+// search functions
 abctree_node.prototype.get_child_by_id = function(id){
   "use strict";
-  for(var x = 0; x < nodes.length; x++)
-    if(nodes[x].id == id)
-      return nodes[x];
+  var children = this.all_below();
+  for(var x = 0; x < children.length; x++)
+    if(children[x].id == id)
+      return children[x];
 
   return null;
 }
+
+abctree_node.prototype.get_child_by_val = function(val){
+  "use strict";
+  var children = this.all_below();
+  for(var x = 0; x < children.length; x++)
+    if(children[x].val == val)
+      return children[x];
+
+  return null;
+}
+
