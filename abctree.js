@@ -39,11 +39,11 @@ abctree_style.innerHTML = ".abctree_collapsed { background-image: url(\"data:ima
 document.getElementsByTagName("head")[0].appendChild(abctree_style);
 abctree_style = document.createElement("style");
 abctree_style.type = "text/css";
-abctree_style.innerHTML = ".abctree_selected { background-color: #e0e0e0; cursor: pointer; font-family: 'Arial'; font-size: 14px; }";
+abctree_style.innerHTML = ".abctree_selected { background-color: #e0e0e0; cursor: pointer; font-family: 'Arial'; font-size: 12px; }";
 document.getElementsByTagName("head")[0].appendChild(abctree_style);
 abctree_style = document.createElement("style");
 abctree_style.type = "text/css";
-abctree_style.innerHTML = ".abctree_deselected { background-color: null; cursor: pointer; font-family: 'Arial'; font-size: 14px; }";
+abctree_style.innerHTML = ".abctree_deselected { background-color: null; cursor: pointer; font-family: 'Arial'; font-size: 12px; }";
 document.getElementsByTagName("head")[0].appendChild(abctree_style);
 
 // abctree = root of the tree = table
@@ -119,6 +119,9 @@ var abctree_node = function(parent, id, val, after){
   this.table = parent.table;
   this.val = val;
   l = parent.table.rows.length;
+  tid = this.last_node_under(after).id;
+
+/*
   if(after != null){
     all = [];
     all.push(after);
@@ -131,6 +134,8 @@ var abctree_node = function(parent, id, val, after){
     all = parent.all_below();
     tid = all[all.length - 1].id;
   }
+*/
+
   insert_point = this.table.rows.length;
   for(x = 0; x < l; x++){
     if(this.table.rows[x].id == tid){
@@ -243,6 +248,7 @@ abctree_node.prototype.make_callback = function(call, arg){
 // add a child node beneath this one
 abctree_node.prototype.add_child = function(id, val, user_cb, after){
   "use strict";
+  var found, list, n;
   var child = new abctree_node(this, id, val, after);
   child.indent = this.indent + 10;
   child.table_row.style.margin = "0px 0px 0px " + child.indent + "px";
@@ -260,7 +266,24 @@ abctree_node.prototype.add_child = function(id, val, user_cb, after){
     other_cb = function(){};
   var cb_fn = function(){sel_cb(); other_cb();};
   child.table_row.children[1].onclick = cb_fn;
-  this.nodes.push(child);
+//  this.nodes.push(child);
+
+  if((typeof after == undefined) || (after == null))
+    this.nodes.push(child);
+  else {
+    found = 0;
+    list = [];
+    for(n = 0; n < this.nodes.length; n++){
+      list.push(this.nodes[n]);
+      if(!found && (this.nodes[n] == after)){
+        list.push(child);
+        found++;
+      }
+    }
+    if(!found)
+      list.push(child);
+    this.nodes = list;
+  }
   child.select();
   this.expand(this);
   return child;
@@ -304,5 +327,24 @@ abctree_node.prototype.get_child_by_val = function(val){
       return children[x];
 
   return null;
-}
+};
 
+// locate insertion point
+abctree_node.prototype.last_node_under = function(after){
+  var all, ins;
+
+  if(after != null){
+    all = [];
+    all.push(after);
+    all = all.concat(after.all_below());
+    ins = all[all.length - 1];
+  }
+  else if(this.parent.nodes.length == 0)
+    ins = this.parent;
+  else {
+    all = this.parent.all_below();
+    ins = all[all.length - 1];
+  }
+
+  return ins;
+};
