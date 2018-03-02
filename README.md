@@ -1,5 +1,5 @@
 # abctree
-Single file, no dependency javascript tree visualizer
+Single file, zero dependency javascript tree visualizer
 
 This is a small library to create expandable tree structures in an HTML page like file picker "trees". 
 It requires a single javascript include and supports callbacks when nodes in the tree are selected.
